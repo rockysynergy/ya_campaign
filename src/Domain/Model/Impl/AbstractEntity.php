@@ -8,12 +8,12 @@ abstract class AbstractEntity implements EntityInterface
 {
     private $identifier;
 
-    public function setIentifier(string $identifier): void
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }
 
-    public function getIentifier(): string
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }

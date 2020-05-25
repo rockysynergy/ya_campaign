@@ -34,8 +34,4 @@ interface CampaignInterface extends EntityInterface
      */
     public function removeQualificationPolicy(QualificationPolicyInterface $qPolicy) :void;
 
-    /**
-     * get benifits
-     */
-    public function getBenefit();
 }

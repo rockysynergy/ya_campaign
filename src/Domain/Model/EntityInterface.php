@@ -5,7 +5,7 @@ namespace Orqlog\Yacampaign\Domain\Model;
 interface EntityInterface
 {
 
-    public function getIentifier():string;
+    public function getIdentifier():string;
 
-    public function setIentifier(string $identifier):void;
+    public function setIdentifier(string $identifier):void;
 }

@@ -2,6 +2,7 @@
 
 namespace Orqlog\Yacampaign\Domain\Model\Impl;
 
+use Orqlog\Yacampaign\Domain\Exception\IllegalArgumentException;
 use Orqlog\Yacampaign\Domain\Exception\NoQualificationPolicyFoundException;
 use Orqlog\Yacampaign\Domain\Model\UserInterface;
 use Orqlog\Yacampaign\Domain\Model\ProductInterface;
@@ -24,6 +25,11 @@ abstract class AbstractCampaign extends AbstractEntity implements CampaignInterf
      * @var array
      */
     private $qualificationPolicies = [];
+
+    /**
+     * @var
+     */
+    private $products = [];
 
     /**
      * @param \DateTime $startAt
@@ -72,29 +78,101 @@ abstract class AbstractCampaign extends AbstractEntity implements CampaignInterf
 
     /**
      * Get the products associated with this campain
+     * 
+     * @return array 
      */
     public function getProducts(): array
     {
-        return [];
-    }
-
-    public function addProduct(ProductInterface $product)
-    {
-    }
-
-    public function removeProduct(ProductInterface $product)
-    {
+        return $this->products;
     }
 
     /**
-     * Add qualificationPolicies
+     * set products
+     * 
+     * @param array $products
+     * @return void
+     */
+    public function setProducts(array $products):void 
+    {
+        foreach ($products as $product) {
+            if (! $product instanceof ProductInterface) {
+                throw new IllegalArgumentException('请提供实现了ProuctInterface接口的对象！');
+            }
+
+            $identifier = $product->getIdentifier();
+            $this->products[$identifier] = $product;
+        }
+    }
+
+    /**
+     * add product
+     * 
+     * @param ProductInterface $product
+     * @return void
+     */
+    public function addProduct(ProductInterface $product):void
+    {
+        $identifier = $product->getIdentifier();
+        $this->products[$identifier] = $product;
+    }
+
+    /**
+     * Remove the product
+     * 
+     * @param ProductInterface $product
+     * @return void
+     */
+    public function removeProduct(ProductInterface $product):void
+    {
+        $newProds= [];
+        foreach ($this->products as $aProd) {
+            if ($aProd->getIdentifier() !== $product->getIdentifier()) {
+                array_push($newProds, $aProd);
+            }
+        }
+
+        $this->products = $newProds;
+    }
+
+    /**
+     * Add qualificationPolicies, if it will overwrite the eixsting one based on Policy's identifier
      * 
      * @param QualificationPolicyInterface $qPolicy
      * @return void
      */
     public function addQualificationPolicy(QualificationPolicyInterface $qPolicy): void
     {
-        array_push($this->qualificationPolicies, $qPolicy);
+        $identifier = $qPolicy->getIdentifier();
+        $this->qualificationPolicies[$identifier] = $qPolicy;
+    }
+
+    
+    /**
+     * set policies
+     * 
+     * @param array $policies
+     * @return void
+     */
+    public function setQualificationPolicies(array $policies):void 
+    {
+        foreach ($policies as $policy) {
+            if (! $policy instanceof QualificationPolicyInterface) {
+                throw new IllegalArgumentException('请提供实现了QualificationPolicyInterface接口的对象！');
+            }
+
+            $identifier = $policy->getIdentifier();
+            $this->qualificationPolicies[$identifier] = $policy;
+        }
+    }
+
+    /**
+     * Get qualification policies
+     * 
+     * @return array
+     */
+    public function getQualificationPolicies():array 
+    {
+        return $this->qualificationPolicies;
     }
 
     /**
@@ -102,19 +180,20 @@ abstract class AbstractCampaign extends AbstractEntity implements CampaignInterf
      */
     public function removeQualificationPolicy(QualificationPolicyInterface $qPolicy): void
     {
+        $identifier = $qPolicy->getIdentifier();
+        if (isset($this->qualificationPolicies[$identifier])) {
+            unset($this->qualificationPolicies[$identifier]);
+        }
     }
 
+    /**
+     * @param (QualificationPolicyInterface $qPolicy
+     * @return boolean
+     */
     public function hasQualificationPolicy(QualificationPolicyInterface $qPolicy): bool
     {
-        $result = false;
-        foreach ($this->qualificationPolicies as $tqPolicy) {
-            if ($tqPolicy->getIdentifier() === $qPolicy->getIdentifier()) {
-                $result = true;
-                break;
-            }
-        }
-
-        return $result;
+        $identifier = $qPolicy->getIdentifier();
+        return isset($this->qualificationPolicies[$identifier]);
     }
 
     /**

@@ -4,7 +4,6 @@ use PHPUnit\Framework\TestCase;
 use Orqlog\Yacampaign\Domain\Model\UserInterface;
 use Orqlog\Yacampaign\Domain\Model\Impl\AbstractCampaign;
 use Orqlog\Yacampaign\Domain\Model\QualificationPolicyInterface;
-use Orqlog\Yacampaign\Domain\Model\Impl\AbstractQualificationPolicy;
 use Orqlog\Yacampaign\Domain\Exception\NoQualificationPolicyFoundException;
 use Orqlog\Yacampaign\Domain\Model\ProductInterface;
 

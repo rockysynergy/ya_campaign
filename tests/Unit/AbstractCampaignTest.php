@@ -5,7 +5,7 @@ use Orqlog\Yacampaign\Domain\Model\UserInterface;
 use Orqlog\Yacampaign\Domain\Model\Impl\AbstractCampaign;
 use Orqlog\Yacampaign\Domain\Model\QualificationPolicyInterface;
 use Orqlog\Yacampaign\Domain\Exception\NoQualificationPolicyFoundException;
-use Orqlog\Yacampaign\Domain\Model\ProductInterface;
+use Orqlog\Yacampaign\Domain\Model\PrizeInterface;
 
 final class AbstractCampaignTest extends TestCase
 {
@@ -195,85 +195,88 @@ final class AbstractCampaignTest extends TestCase
     /**
      * @test
      */
-    public function addProduct()
+    public function addPrize()
     {
         $campaign = new DummyCampaign();
         $prodIdentifier = 'TheProd_id';
 
-        $product = $this->createMock(ProductInterface::class);
-        $product->expects($this->any())
+        $prize = $this->createMock(PrizeInterface::class);
+        $prize->expects($this->any())
             ->method('getIdentifier')
             ->willReturn($prodIdentifier);
-        $campaign->addProduct($product);
+        $campaign->addPrize($prize);
         
-        $products = $campaign->getProducts();
-        $this->assertEquals($prodIdentifier, $products[$prodIdentifier]->getIdentifier());
+        $prizes = $campaign->getPrizes();
+        $this->assertEquals($prodIdentifier, $prizes[$prodIdentifier]->getIdentifier());
     }
 
     /**
      * @test
      */
-    public function addProductScreenOutDuplication()
+    public function addPrizeScreenOutDuplication()
     {
         $campaign = new DummyCampaign();
         $prodIdentifier = 'TheProd_id';
 
-        $product = $this->createMock(ProductInterface::class);
-        $product->expects($this->any())
+        $prize = $this->createMock(PrizeInterface::class);
+        $prize->expects($this->any())
             ->method('getIdentifier')
             ->willReturn($prodIdentifier);
-        $campaign->addProduct($product);
-        $campaign->addProduct($product);
+        $campaign->addPrize($prize);
+        $campaign->addPrize($prize);
         
-        $products = $campaign->getProducts();
-        $this->assertEquals(1, count($products));
-        $this->assertEquals($prodIdentifier, $products[$prodIdentifier]->getIdentifier());
+        $prizes = $campaign->getPrizes();
+        $this->assertEquals(1, count($prizes));
+        $this->assertEquals($prodIdentifier, $prizes[$prodIdentifier]->getIdentifier());
     }
 
     /**
      * @test
      */
-    public function removeProduct()
+    public function removePrize()
     {
         $campaign = new DummyCampaign();
         $prodIdentifier = 'TheProd_id';
 
-        $product = $this->createMock(ProductInterface::class);
-        $product->expects($this->any())
+        $prize = $this->createMock(PrizeInterface::class);
+        $prize->expects($this->any())
             ->method('getIdentifier')
             ->willReturn($prodIdentifier);
-        $campaign->addProduct($product);
-        $products = $campaign->getProducts();
-        $this->assertEquals($prodIdentifier, $products[$prodIdentifier]->getIdentifier());
+        $campaign->addPrize($prize);
+        $prizes = $campaign->getPrizes();
+        $this->assertEquals($prodIdentifier, $prizes[$prodIdentifier]->getIdentifier());
 
-        $campaign->removeProduct($product);
-        $this->assertEquals(0, count($campaign->getProducts()));
+        $campaign->removePrize($prize);
+        $this->assertEquals(0, count($campaign->getPrizes()));
     }
 
     /**
      * @test
      */
-    public function setProducts()
+    public function setPrizes()
     {
-        $products = [];
+        $prizes = [];
         for ($i = 0; $i < 3; $i++) {
-            $product = $this->createMock(ProductInterface::class);
-            $product->expects($this->any())
+            $prize = $this->createMock(PrizeInterface::class);
+            $prize->expects($this->any())
                 ->method('getIdentifier')
-                ->willReturn('product_' . $i);
+                ->willReturn('prize_' . $i);
             
-            array_push($products, $product);
-            array_push($products, $product);
+            array_push($prizes, $prize);
+            array_push($prizes, $prize);
         }
             
         $campaign = new DummyCampaign();
-        $campaign->setProducts($products);
-        $this->assertEquals(3, count($campaign->getProducts()));
+        $campaign->setPrizes($prizes);
+        $this->assertEquals(3, count($campaign->getPrizes()));
     }
 
 }
 
 class DummyCampaign extends AbstractCampaign 
 {
-
+    public function decidePrize(\Orqlog\Yacampaign\Domain\Model\UserInterface $user) :array
+    {
+        return [['discount' => 0.8]];
+    }
 }

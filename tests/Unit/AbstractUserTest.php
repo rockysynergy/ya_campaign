@@ -149,6 +149,41 @@ final class AbstractUserTest extends TestCase
         $joinRecords = $user->getJoinRecords();
         $this->assertEquals(1, count($joinRecords));
     }
+
+    /**
+     * @test
+     */
+    public function joinCampaignSuccessWouldAddTheJoinRecordProperties()
+    {
+        $user = new DummyUser();
+        $campaign = $this->createMock(CampaignInterface::class);
+        $campaign->expects($this->once())
+            ->method('isOpen')
+            ->willReturn(true);
+        $campaign->expects($this->once())
+            ->method('isQualified')
+            ->with($this->equalTo($user))
+            ->willReturn(true);
+
+        $joinRecord = $this->createMock(JoinRecordInterface::class);
+        $joinRecord->expects($this->once())
+            ->method('setCampaign');
+        $joinRecord->expects($this->once())
+            ->method('setJoinTime');
+        $joinRecord->expects($this->once())
+            ->method('setPrizes');
+        
+        $registry = $this->createMock(RegistryServiceInterface::class);
+        $registry->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo(JoinRecordInterface::class))
+            ->willReturn($joinRecord);
+        $user->setRegistryService($registry);
+
+        $user->joinCampaign($campaign);
+        $joinRecords = $user->getJoinRecords();
+        $this->assertEquals(1, count($joinRecords));
+    }
 }
 
 class DummyUser extends AbstractUser

@@ -10,6 +10,6 @@ abstract class AbstractQualificationPolicy extends AbstractEntity implements Qua
 
     public function isQualified(UserInterface $user) :bool
     {
-        return true;
+        return false;
     }
 }

@@ -15,6 +15,6 @@ interface UserInterface extends EntityInterface
 
     public function getJoinRecords():array;
 
-    public function joinCampaign(CampaignInterface $campaign):void;
+    public function joinCampaign(CampaignInterface $campaign):JoinRecordInterface;
 
 }

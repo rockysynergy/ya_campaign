@@ -16,13 +16,13 @@ interface CampaignInterface extends EntityInterface
     public function isQualified(UserInterface $user):bool;
 
     /**
-     * Get the products associated with this campain
+     * Get the prizes associated with this campain
      */
-    public function getProducts() :array;
+    public function getPrizes() :array;
 
-    public function addProduct(ProductInterface $product);
+    public function addPrize(PrizeInterface $prize);
     
-    public function removeProduct(ProductInterface $product);
+    public function removePrize(PrizeInterface $prize);
 
     /**
      * Add qualificationPolicies
@@ -34,4 +34,5 @@ interface CampaignInterface extends EntityInterface
      */
     public function removeQualificationPolicy(QualificationPolicyInterface $qPolicy) :void;
 
+    public function decidePrize(UserInterface $user) :array;
 }

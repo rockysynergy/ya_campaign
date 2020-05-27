@@ -5,7 +5,7 @@ namespace Orqlog\Yacampaign\Domain\Model\Impl;
 use Orqlog\Yacampaign\Domain\Exception\IllegalArgumentException;
 use Orqlog\Yacampaign\Domain\Exception\NoQualificationPolicyFoundException;
 use Orqlog\Yacampaign\Domain\Model\UserInterface;
-use Orqlog\Yacampaign\Domain\Model\ProductInterface;
+use Orqlog\Yacampaign\Domain\Model\PrizeInterface;
 use Orqlog\Yacampaign\Domain\Model\CampaignInterface;
 use Orqlog\Yacampaign\Domain\Model\QualificationPolicyInterface;
 
@@ -29,7 +29,7 @@ abstract class AbstractCampaign extends AbstractEntity implements CampaignInterf
     /**
      * @var
      */
-    private $products = [];
+    private $prizes = [];
 
     /**
      * @param \DateTime $startAt
@@ -77,61 +77,61 @@ abstract class AbstractCampaign extends AbstractEntity implements CampaignInterf
     }
 
     /**
-     * Get the products associated with this campain
+     * Get the prizes associated with this campain
      * 
      * @return array 
      */
-    public function getProducts(): array
+    public function getPrizes(): array
     {
-        return $this->products;
+        return $this->prizes;
     }
 
     /**
-     * set products
+     * set prizes
      * 
-     * @param array $products
+     * @param array $prizes
      * @return void
      */
-    public function setProducts(array $products):void 
+    public function setPrizes(array $prizes):void 
     {
-        foreach ($products as $product) {
-            if (! $product instanceof ProductInterface) {
+        foreach ($prizes as $prize) {
+            if (! $prize instanceof PrizeInterface) {
                 throw new IllegalArgumentException('请提供实现了ProuctInterface接口的对象！');
             }
 
-            $identifier = $product->getIdentifier();
-            $this->products[$identifier] = $product;
+            $identifier = $prize->getIdentifier();
+            $this->prizes[$identifier] = $prize;
         }
     }
 
     /**
-     * add product
+     * add prize
      * 
-     * @param ProductInterface $product
+     * @param PrizeInterface $prize
      * @return void
      */
-    public function addProduct(ProductInterface $product):void
+    public function addPrize(PrizeInterface $prize):void
     {
-        $identifier = $product->getIdentifier();
-        $this->products[$identifier] = $product;
+        $identifier = $prize->getIdentifier();
+        $this->prizes[$identifier] = $prize;
     }
 
     /**
-     * Remove the product
+     * Remove the prize
      * 
-     * @param ProductInterface $product
+     * @param PrizeInterface $prize
      * @return void
      */
-    public function removeProduct(ProductInterface $product):void
+    public function removePrize(PrizeInterface $prize):void
     {
         $newProds= [];
-        foreach ($this->products as $aProd) {
-            if ($aProd->getIdentifier() !== $product->getIdentifier()) {
+        foreach ($this->prizes as $aProd) {
+            if ($aProd->getIdentifier() !== $prize->getIdentifier()) {
                 array_push($newProds, $aProd);
             }
         }
 
-        $this->products = $newProds;
+        $this->prizes = $newProds;
     }
 
     /**

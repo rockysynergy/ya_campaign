@@ -14,12 +14,12 @@ class CampaignService
     /**
      * Factory method to make Campaign
      */
-    public function createCampaign(\DateTime $startTime, \DateTime $endTime, array $products, array $policies) :CampaignInterface
+    public function createCampaign(\DateTime $startTime, \DateTime $endTime, array $prizes, array $policies) :CampaignInterface
     {
         $campaign = new $this->campaignClass();
         $campaign->setStartTime($startTime);
         $campaign->setEndTime($endTime);
-        $campaign->setProducts($products);
+        $campaign->setPrizes($prizes);
         $campaign->setQualificationPolicies($policies);
 
         return $campaign;

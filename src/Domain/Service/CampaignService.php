@@ -1,29 +1,32 @@
 <?php
-
 namespace Orqlog\Yacampaign\Domain\Service;
 
 use Orqlog\Yacampaign\Domain\Model\CampaignInterface;
 
-class CampaignService 
+class CampaignService  implements CampaignServiceInterface
 {
+
     /**
-     * @var 
+     * @var \Orqlog\Yacampaign\Domain\Model\CampaignInterface
      */
-    protected $campaignClass;
+    protected $campaign;
 
     /**
      * Factory method to make Campaign
      */
-    public function createCampaign(\DateTime $startTime, \DateTime $endTime, array $prizes, array $policies) :CampaignInterface
+    public function __construct(CampaignInterface $campaign)
     {
-        $campaign = new $this->campaignClass();
-        $campaign->setStartTime($startTime);
-        $campaign->setEndTime($endTime);
-        $campaign->setPrizes($prizes);
-        $campaign->setQualificationPolicies($policies);
-
-        return $campaign;
+        $this->campaign = $campaign;
     }
 
+    public function setCampaign(CampaignInterface $campaign)
+    {
+        $this->campaign = $campaign;
+    }
+
+    public function getCampaign() :CampaignInterface
+    {
+        return $this->campaign;
+    }
     
 }

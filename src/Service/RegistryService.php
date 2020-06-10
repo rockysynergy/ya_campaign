@@ -2,31 +2,34 @@
 
 namespace Orqlog\Yacampaign\Service;
 
-use Orqlog\Yacampaign\Domain\Model\Impl\BaseJoinRecord;
-use Orqlog\Yacampaign\Domain\Model\JoinRecordInterface;
+use CampaignServiceInterface;
+use Orqlog\Yacampaign\Domain\Service\CampaignService;
 
-class RegistryService implements RegistryServiceInterface
+class RegistryService
 {
     /**
      * @var array
      */
-    protected $map = [];
+    private static $map = [CampaignServiceInterface::class =>  CampaignService::class];
 
-    public function __construct()
+    public static function get(string $contract, $constructArgs = []) :?object
     {
-        $this->map[JoinRecordInterface::class] = new BaseJoinRecord();
-    }
+        if (isset(self::$map[$contract])) {
+            $class = self::$map[$contract];
+            if (count($constructArgs)<1) {
+                $obj = new $class();
+            } else {
+                $r = new \ReflectionClass($class);
+                $obj = $r->newInstanceArgs($constructArgs);
+            }
 
-    public function get(string $contract) :?object
-    {
-        if (isset($this->map[$contract])) {
-            return $this->map[$contract];
+            return $obj;
         }
 
     }
 
-    public function set(string $contract, object $obj) :void
+    public static function set(string $contract, string $fqClass) :void
     {
-        $this->map[$contract] = $obj;
+        self::$map[$contract] = $fqClass;
     }
 }

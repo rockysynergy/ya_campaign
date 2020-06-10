@@ -2,7 +2,9 @@
 
 namespace Orqlog\Yacampaign\Domain\Model;
 
+use Orqlog\Yacampaign\Domain\Service\UserServiceInterface;
+
 interface QualificationPolicyInterface extends EntityInterface
 {
-    public function isQualified(UserInterface $user) :bool;
+    public function isQualified(UserServiceInterface $userService) :bool;
 }
